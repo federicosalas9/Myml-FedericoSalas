@@ -43,7 +43,7 @@ func GetInfoC(c *ginGonic.Context) {
 	var errors *apierrors.ApiError
 	var wg sync.WaitGroup
 	go func() { myml.GetUserSite(user.SiteID, cSites, cErrors) }()
-	go func() { myml.GetSiteCategories(user.SiteID, cCategories) }()
+	go func() { myml.GetSiteCategories(user.SiteID, cCategories, cErrors) }()
 	wg.Add(3)
 	go func() {
 		site = <-cSites //extraigo la info de sitio cargada en el canal

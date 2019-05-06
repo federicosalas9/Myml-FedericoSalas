@@ -28,11 +28,11 @@ func GetUserSite(siteID string, c chan myml.Site, cErrors chan *apierrors.ApiErr
 	cErrors <- nil
 }
 
-func GetSiteCategories(siteID string, c chan myml.Categories) {
+func GetSiteCategories(siteID string, c chan myml.Categories, cErrors chan *apierrors.ApiError) {
 	categories := &myml.Categories{}
 	categories.GetC(siteID)
 	if apiErr := categories.GetC(siteID); apiErr != nil {
-		//--
+		cErrors <- apiErr
 	}
 	c <- *categories
 }
