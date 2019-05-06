@@ -10,24 +10,22 @@ func GetUserFromAPI(userID int64) (*myml.User, *apierrors.ApiError) {
 	user := &myml.User{
 		ID: userID,
 	}
-	user.GetU()
 	if apiErr := user.GetU(); apiErr != nil {
 		return nil, apiErr
 	}
-
 	return user, nil
 }
 
-func GetUserSite(siteID string, c chan myml.Site) {
+func GetUserSite(siteID string, c chan myml.Site, cErrors chan *apierrors.ApiError) {
 
 	site := &myml.Site{
 		ID: siteID,
 	}
-	site.GetS()
 	if apiErr := site.GetS(); apiErr != nil {
-		//--
+		cErrors <- apiErr
 	}
 	c <- *site
+	cErrors <- nil
 }
 
 func GetSiteCategories(siteID string, c chan myml.Categories) {
