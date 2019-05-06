@@ -5,42 +5,36 @@ import (
 	"github.com/mercadolibre/myml/src/api/utils/apierrors"
 )
 
-
-
 func GetUserFromAPI(userID int64) (*myml.User, *apierrors.ApiError) {
 
 	user := &myml.User{
-		ID:userID,
+		ID: userID,
 	}
 	user.GetU()
-	if apiErr := user.GetU();apiErr != nil{
-		return nil,apiErr
+	if apiErr := user.GetU(); apiErr != nil {
+		return nil, apiErr
 	}
 
-	return user,nil
+	return user, nil
 }
 
-
-func GetUserSite(siteID string,c chan myml.Site) { //(*myml.Site, *apierrors.ApiError) {
+func GetUserSite(siteID string, c chan myml.Site) {
 
 	site := &myml.Site{
-		ID:siteID,
+		ID: siteID,
 	}
 	site.GetS()
-	if apiErr := site.GetS(); apiErr != nil{
-		//return nil,apiErr
+	if apiErr := site.GetS(); apiErr != nil {
+		//--
 	}
-	//return site,nil
-
-	c<-*site
+	c <- *site
 }
 
-func GetSiteCategories(siteID string,c chan myml.Categories) {
+func GetSiteCategories(siteID string, c chan myml.Categories) {
 	categories := &myml.Categories{}
 	categories.GetC(siteID)
-	if apiErr := categories.GetC(siteID); apiErr != nil{
+	if apiErr := categories.GetC(siteID); apiErr != nil {
 
 	}
-	c<-*categories
+	c <- *categories
 }
-

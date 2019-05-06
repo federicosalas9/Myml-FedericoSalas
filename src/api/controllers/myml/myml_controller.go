@@ -33,27 +33,23 @@ func GetInfoC(c *ginGonic.Context) {
 		c.JSON(apiErr.Status, apiErr)
 		return
 	}
-	//------------------------------------------GO RUTINE SITES---------------------------------------------------
-	cSites := make(chan myml2.Site) //creo el canal de comunicacion de sitio
-	var site myml2.Site
-	go func() { myml.GetUserSite(user.SiteID, cSites) }()
-	go func() {
-		site = <-cSites //extraigo la info de sitio cargada en el canal
-
-	}()
-	//----------------------------------------GO RUTINE CATEGORIES------------------------------------------------
+	//------------------------------------------GO RUTINES------------------------------------------------------
+	cSites := make(chan myml2.Site)            //creo el canal de comunicacion de sitio
 	cCategories := make(chan myml2.Categories) //creo el canal de comunicacion de categorias
+	var site myml2.Site
 	var categories myml2.Categories
+	go func() { myml.GetUserSite(user.SiteID, cSites) }()
 	go func() { myml.GetSiteCategories(user.SiteID, cCategories) }()
 	go func() {
+		site = <-cSites            //extraigo la info de sitio cargada en el canal
 		categories = <-cCategories //extraigo la info de categorias cargada en el canal
 
 	}()
 	//------------------------------------------RESPUESTA JSON----------------------------------------------------
 	response := &myml2.Response{
-		User: *user,
-		Site: site,
-		Categories:categories,
+		User:       *user,
+		Site:       site,
+		Categories: categories,
 	}
 	c.JSON(http.StatusOK, response)
 }
