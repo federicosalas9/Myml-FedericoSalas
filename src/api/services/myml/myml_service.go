@@ -34,7 +34,7 @@ func GetSiteCategories(siteID string, c chan myml.Categories) {
 	categories := &myml.Categories{}
 	categories.GetC(siteID)
 	if apiErr := categories.GetC(siteID); apiErr != nil {
-
+		//--
 	}
 	c <- *categories
 }
