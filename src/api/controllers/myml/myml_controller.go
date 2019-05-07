@@ -17,6 +17,7 @@ const (
 func GetInfoC(c *ginGonic.Context) {
 
 	//------------------------------------------------------------------------------------------------------------
+	response := myml2.Response{}
 	userID := c.Param(paramUserID)
 	//convierto el id a entero
 	id, err := strconv.ParseInt(userID, 10, 64)
@@ -34,37 +35,32 @@ func GetInfoC(c *ginGonic.Context) {
 		c.JSON(apiErr.Status, apiErr)
 		return
 	}
+	response.User = *user
 	//------------------------------------------GO RUTINES------------------------------------------------------
-	cSites := make(chan myml2.Site)            //creo el canal de comunicacion de sitio
-	cCategories := make(chan myml2.Categories) //creo el canal de comunicacion de categorias
+	cResponse := make(chan myml2.Response)
 	cErrors := make(chan *apierrors.ApiError)
-	var site myml2.Site
-	var categories myml2.Categories
 	var errors *apierrors.ApiError
 	var wg sync.WaitGroup
-	go func() { myml.GetUserSite(user.SiteID, cSites, cErrors) }()
-	go func() { myml.GetSiteCategories(user.SiteID, cCategories, cErrors) }()
-	wg.Add(3)
+	go func() { myml.GetUserSite(user.SiteID, cResponse, cErrors) }()
+	go func() { myml.GetSiteCategories(user.SiteID, cResponse, cErrors) }()
+	wg.Add(5)
 	go func() {
-		site = <-cSites //extraigo la info de sitio cargada en el canal
+		cResponse <- response
 		wg.Done()
-		categories = <-cCategories //extraigo la info de categorias cargada en el canal
+		response = <-cResponse
+		wg.Done()
+		cResponse <- response
+		wg.Done()
+		response = <-cResponse
 		wg.Done()
 		errors = <-cErrors
 		wg.Done()
 	}()
 	wg.Wait()
 	//------------------------------------------RESPUESTA JSON----------------------------------------------------
-
 	if errors != nil {
 		c.JSON(errors.Status, errors)
 		return
-	}
-
-	response := &myml2.Response{
-		User:       *user,
-		Site:       site,
-		Categories: categories,
 	}
 	c.JSON(http.StatusOK, response)
 }

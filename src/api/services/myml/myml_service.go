@@ -16,7 +16,7 @@ func GetUserFromAPI(userID int64) (*myml.User, *apierrors.ApiError) {
 	return user, nil
 }
 
-func GetUserSite(siteID string, c chan myml.Site, cErrors chan *apierrors.ApiError) {
+func GetUserSite(siteID string, c chan myml.Response, cErrors chan *apierrors.ApiError) {
 
 	site := &myml.Site{
 		ID: siteID,
@@ -24,15 +24,20 @@ func GetUserSite(siteID string, c chan myml.Site, cErrors chan *apierrors.ApiErr
 	if apiErr := site.GetS(); apiErr != nil {
 		cErrors <- apiErr
 	}
-	c <- *site
+	response := <-c
+	response.Site = *site
+	c <- response
 	cErrors <- nil
 }
 
-func GetSiteCategories(siteID string, c chan myml.Categories, cErrors chan *apierrors.ApiError) {
+func GetSiteCategories(siteID string, c chan myml.Response, cErrors chan *apierrors.ApiError) {
 	categories := &myml.Categories{}
 	categories.GetC(siteID)
 	if apiErr := categories.GetC(siteID); apiErr != nil {
 		cErrors <- apiErr
 	}
-	c <- *categories
+	response := <-c
+	response.Categories = *categories
+	c <- response
+	cErrors <- nil
 }
