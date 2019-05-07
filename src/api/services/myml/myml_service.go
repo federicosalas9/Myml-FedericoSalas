@@ -6,7 +6,6 @@ import (
 )
 
 func GetUserFromAPI(userID int64) (*myml.User, *apierrors.ApiError) {
-
 	user := &myml.User{
 		ID: userID,
 	}
@@ -24,9 +23,10 @@ func GetUserSite(siteID string, c chan myml.Response, cErrors chan *apierrors.Ap
 	if apiErr := site.GetS(); apiErr != nil {
 		cErrors <- apiErr
 	}
-	response := <-c
+
+	response := <-c //extraigo del canal el response con el user modificado
 	response.Site = *site
-	c <- response
+	c <- response //modifico el site y devuelvo al canal el response que ahora tiene el user y el site modificado
 	cErrors <- nil
 }
 
@@ -36,8 +36,8 @@ func GetSiteCategories(siteID string, c chan myml.Response, cErrors chan *apierr
 	if apiErr := categories.GetC(siteID); apiErr != nil {
 		cErrors <- apiErr
 	}
-	response := <-c
+	response := <-c //extraigo del canal el response con el user y el site modificado
 	response.Categories = *categories
-	c <- response
+	c <- response //modifico las categorias y devuelvo al canal el response que ahora tiene el user, el site y las cat. modificadas
 	cErrors <- nil
 }

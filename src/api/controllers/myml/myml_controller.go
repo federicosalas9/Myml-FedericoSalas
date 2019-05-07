@@ -15,8 +15,7 @@ const (
 )
 
 func GetInfoC(c *ginGonic.Context) {
-
-	//------------------------------------------------------------------------------------------------------------
+	//-----------------------------------------------------------------------------------------------------------
 	response := myml2.Response{}
 	userID := c.Param(paramUserID)
 	//convierto el id a entero
@@ -41,26 +40,27 @@ func GetInfoC(c *ginGonic.Context) {
 	cErrors := make(chan *apierrors.ApiError)
 	var errors *apierrors.ApiError
 	var wg sync.WaitGroup
-	go func() { myml.GetUserSite(user.SiteID, cResponse, cErrors) }()
-	go func() { myml.GetSiteCategories(user.SiteID, cResponse, cErrors) }()
 	wg.Add(5)
 	go func() {
-		cResponse <- response
 		wg.Done()
-		response = <-cResponse
+		cResponse <- response //cargo en el canal el response con el user  modificado
 		wg.Done()
-		cResponse <- response
+		response = <-cResponse //extraigo del canal el response con el user y el site modificado
 		wg.Done()
-		response = <-cResponse
+		cResponse <- response //cargo en el canal el response con el user y el site modificado
 		wg.Done()
-		errors = <-cErrors
+		response = <-cResponse //extraigo del canal el response con el user, el site y las cat modificadas
 		wg.Done()
+		errors = <-cErrors //si hay errores los cargo en el canal de errores
+		if errors != nil {
+			c.JSON(errors.Status, errors)
+			wg.Done()
+			return
+		}
 	}()
+	go func() { myml.GetUserSite(response.User.SiteID, cResponse, cErrors) }()
+	go func() { myml.GetSiteCategories(response.User.SiteID, cResponse, cErrors) }()
 	wg.Wait()
 	//------------------------------------------RESPUESTA JSON----------------------------------------------------
-	if errors != nil {
-		c.JSON(errors.Status, errors)
-		return
-	}
 	c.JSON(http.StatusOK, response)
 }
