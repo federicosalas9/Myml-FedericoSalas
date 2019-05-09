@@ -42,7 +42,6 @@ func GetInfoC(c *ginGonic.Context) {
 	var wg sync.WaitGroup
 	wg.Add(5)
 	go func() {
-		wg.Done()
 		cResponse <- response //cargo en el canal el response con el user  modificado
 		wg.Done()
 		response = <-cResponse //extraigo del canal el response con el user y el site modificado
@@ -51,12 +50,13 @@ func GetInfoC(c *ginGonic.Context) {
 		wg.Done()
 		response = <-cResponse //extraigo del canal el response con el user, el site y las cat modificadas
 		wg.Done()
-		errors = <-cErrors //si hay errores los cargo en el canal de errores
+		errors = <-cErrors //si hay errores los cargo en el canal de errores y termino la ejecucion
 		if errors != nil {
 			c.JSON(errors.Status, errors)
 			wg.Done()
 			return
 		}
+		wg.Done()
 	}()
 	go func() { myml.GetUserSite(response.User.SiteID, cResponse, cErrors) }()
 	go func() { myml.GetSiteCategories(response.User.SiteID, cResponse, cErrors) }()

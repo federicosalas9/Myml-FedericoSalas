@@ -9,8 +9,10 @@ import (
 )
 
 const (
-	urlUsers = "https://api.mercadolibre.com/users/"
-	urlSites="https://api.mercadolibre.com/sites/"
+	//urlUsers = "https://api.mercadolibre.com/users/"
+	//urlSites="https://api.mercadolibre.com/sites/"
+	urlUsers = "http://localhost:8082/user/"
+	urlSites = "http://localhost:8082/sites/"
 )
 
 func (users *User) GetU() *apierrors.ApiError {
@@ -87,7 +89,7 @@ func (categories *Categories) GetC(siteID string) *apierrors.ApiError {
 			Status:  http.StatusBadRequest,
 		}
 	}
-	final := fmt.Sprintf("%s%s%s", urlSites, siteID,"/categories")
+	final := fmt.Sprintf("%s%s%s", urlSites, siteID, "/categories")
 	response, err := http.Get(final)
 	if err != nil {
 		return &apierrors.ApiError{
@@ -112,4 +114,3 @@ func (categories *Categories) GetC(siteID string) *apierrors.ApiError {
 	}
 	return nil
 }
-
