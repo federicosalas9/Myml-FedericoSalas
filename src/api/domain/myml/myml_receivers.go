@@ -3,7 +3,7 @@ package myml
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/mercadolibre/myml/src/api/utils/apierrors"
+	"github.com/mercadolibre/Myml - Federico Salas/src/api/utils/apierrors"
 	"io/ioutil"
 	"net/http"
 )

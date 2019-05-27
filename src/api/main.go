@@ -2,8 +2,8 @@ package main
 
 import (
 	ginGonic "github.com/gin-gonic/gin" //si hay dos dependencias que se llamen igual agrego otro nombre adelante
-	"github.com/mercadolibre/myml/src/api/controllers/myml"
-	"github.com/mercadolibre/myml/src/api/controllers/ping"
+	"github.com/mercadolibre/Myml - Federico Salas/src/api/controllers/myml"
+	"github.com/mercadolibre/Myml - Federico Salas/src/api/controllers/ping"
 )
 
 const (

@@ -1,8 +1,8 @@
 package myml
 
 import (
-	"github.com/mercadolibre/myml/src/api/domain/myml"
-	"github.com/mercadolibre/myml/src/api/utils/apierrors"
+	"github.com/mercadolibre/Myml - Federico Salas/src/api/domain/myml"
+	"github.com/mercadolibre/Myml - Federico Salas/src/api/utils/apierrors"
 )
 
 func GetUserFromAPI(userID int64) (*myml.User, *apierrors.ApiError) {

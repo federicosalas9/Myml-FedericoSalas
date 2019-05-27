@@ -2,9 +2,9 @@ package myml
 
 import (
 	ginGonic "github.com/gin-gonic/gin"
-	myml2 "github.com/mercadolibre/myml/src/api/domain/myml"
-	"github.com/mercadolibre/myml/src/api/services/myml"
-	"github.com/mercadolibre/myml/src/api/utils/apierrors"
+	myml2 "github.com/mercadolibre/Myml - Federico Salas/src/api/domain/myml"
+	"github.com/mercadolibre/Myml - Federico Salas/src/api/services/myml"
+	"github.com/mercadolibre/Myml - Federico Salas/src/api/utils/apierrors"
 	"net/http"
 	"strconv"
 	"sync"
